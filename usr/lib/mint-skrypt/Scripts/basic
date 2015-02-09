@@ -1,0 +1,24 @@
+#!/bin/bash
+
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo apt-get -y --force-yes install build-essential
+sudo apt-get -y --force-yes install linux-headers-`uname -r`
+sudo apt-get -y --force-yes install ubuntu-restricted-extras
+sudo apt-get -y --force-yes install rar unrar p7zip-full p7zip-rar unace unzip file-roller atool
+sudo apt-get -y --force-yes install wine clamav clamav-*
+wget https://launchpad.net/~wine-doors-dev-team/+archive/ppa/+files/wine-doors_0.1.3rc1-1_all.deb
+sudo dpkg -i --force-all wine-doors_0.1.3rc1-1_all.deb
+rm wine-doors_0.1.3rc1-1_all.deb
+sudo apt-get install -f 
+sudo dpkg --configure -a  
+sudo apt-get -y --force-yes remove openjdk-*
+sudo apt-get -y --force-yes autoremove
+sudo apt-get -y --force-yes install sun-java6-fonts sun-java6-jre sun-java6-plugin sun-java6-jdk
+sudo apt-get -y --force-yes install adobe-flashplugin
+
+
+                           
+                     
+

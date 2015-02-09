@@ -1,0 +1,39 @@
+#!/bin/bash
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo apt-get -y --force-yes install libdvdcss2 libdvdread4 w32codecs gstreamer0.10-ffmpeg gstreamer0.10-pitfdll  gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse libdvdnav4 libdvdread4 libdvdcss2 libxine1-ffmpeg w32codecs 
+sudo add-apt-repository ppa:c-korn/vlc
+sudo apt-get -y update
+sudo apt-get -y --force-yes install vlc mozilla-plugin-vlc
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:rvm/mplayer
+sudo apt-get -y --force-yes update 
+sudo apt-get -y --force-yes install mplayer
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:songbird-daily/ppa
+sudo apt-get -y --force-yes update 
+sudo apt-get -y --force-yes install songbird
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:banshee-team/ppa
+sudo apt-get -y --force-yes update 
+sudo apt-get -y --force-yes install banshee libappindicator0-cil banshee-extension-appindicator banshee-extension-ubuntuonemusicstore   
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo apt-get -y --force-yes install acetoneiso
+sudo sh -c 'echo "deb http://ppa.launchpad.net/jason-scheunemann/ppa/ubuntu karmic main" >> /etc/apt/sources.list' 
+sudo sh -c 'echo "deb-src http://ppa.launchpad.net/jason-scheunemann/ppa/ubuntu karmic main" >> /etc/apt/sources.list'  
+sudo wget -q 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x932062C9CD30EE56' -O - | sudo apt-key add 
+sudo apt-get -y update
+sudo apt-get -y --force-yes install sopcast-player libstdc++5  
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo apt-get -y --force-yes install minitube
+sudo add-apt-repository ppa:team-xbmc/ppa/ubuntu
+sudo apt-get -y --force-yes update   
+sudo apt-get -y --force-yes install xbmc                
+

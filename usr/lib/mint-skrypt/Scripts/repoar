@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Eve Installer 0.9
+#
+# Last Update: 21/06/10
+
+TITLE="Eve Launchpad"
+
+# Select what to save
+OPTIONS=$(zenity --list --width 300 --height 200 --title "$TITLE" --text "add remove launchpad repository" --radiolist --hide-column 2 --column "" --column "" --column "Items" --print-column 2 --separator "," \
+FALSE Agregar "Add" \
+FALSE Remover "Remove")
+
+if [ "$OPTIONS" = "" ]; then
+	exit 0
+fi
+
+
+(
+# Check Write permissions
+
+DOIT=$(echo $OPTIONS | grep "Add")
+if [ -n "$DOIT" ] ; then
+	nombre=$(zenity --title "Repository Luanchpad" --width=300 --height=100 --entry --text="$OPTIONS")
+        sudo add-apt-repository ppa:$nombre
+        sudo apt-get update
+soft=$(zenity --title "Install Software" --width=300 --height=100 --entry --text="$OPTIONS")
+        sudo apt-get install  -y $soft
+fi
+
+DOIT=$(echo $OPTIONS | grep "Remove")
+if [ -n "$DOIT" ] ; then
+        zenity --info --width 300 --height 100 --title "Eve Launchpad Remove" --text "To remove you must replace “/” by  “-”   \n\nExample: ppa:rvm/mplayer\n\nNO: rvm/mplayer\n\nYES: rvm-mplayer "
+        nombre=$(zenity --title "Repository Luanchpad" --width=300 --height=100 --entry --text="$OPTIONS")
+        sudo rm /etc/apt/sources.list.d/$nombre-lucid.list
+        sudo rm /etc/apt/sources.list.d/$nombre-lucid.list.save
+        sudo apt-get update
+        echo "$nombre PPA Launchpad Removed"
+fi
+) 
+# End of Script

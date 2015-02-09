@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo wget -O /etc/apt/sources.list.d/frogatto.list http://www.frogatto.com/apt/frogatto.list
+wget -O- http://www.frogatto.com/apt/key.gpg | sudo apt-key add -
+sudo apt-get update 
+sudo apt-get install -y frogatto

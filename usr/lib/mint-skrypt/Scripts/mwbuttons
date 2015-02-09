@@ -1,0 +1,416 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2010 Pablo Seminario <pabluk@gmail.com>
+# This software is distributed under the terms of the GNU General
+# Public License
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import pygtk
+import gtk
+import gobject
+import gconf
+from base64 import b64decode
+
+
+APP_NAME = 'Metacity Window Buttons'
+APP_DESC = 'A simple tool to configure the Metacity window buttons'
+APP_URL = 'http://launchpad.net/mwbuttons'
+VERSION = '0.2.4'
+AUTHOR = 'Pablo Seminario <pabluk@gmail.com>'
+
+class MButtons(gtk.Window):
+
+    def __init__(self):
+
+        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+
+        _ = self._translate_text
+        self.languages = {
+                'es':
+                    {'Metacity Window Buttons':'Botones de Metacity',
+                     'A simple tool to configure the Metacity window buttons':
+                     'Una pequeña herramienta para configurar los botones ' \
+                     'de las ventanas de Metacity',
+                     '_File':'_Archivo',
+                     '_Settings':'_Configuraciones',
+                     '_Help':'A_yuda',
+                     'Lucid style':'Estilo Lucid',
+                     'Karmic style':'Estilo Karmic',
+                     'Mac OS X style':'Estilo Mac OS X',
+                     'Restore style':'Restaurar estilo',
+                     'translator-credits':''
+                    },
+                'fr':
+                    {'Metacity Window Buttons':'Boutons de Metacity',
+                     'A simple tool to configure the Metacity window buttons':
+                     'Un outil simple à configurer les boutons de Metacity',
+                     '_File':'_Fichier',
+                     '_Settings':'_Paramètres',
+                     '_Help':'Aid_e',
+                     'Lucid style':'Lucid style',
+                     'Karmic style':'Karmic style',
+                     'Mac OS X style':'Mac OS X style',
+                     'Restore style':'Restaurer le style',
+                     'translator-credits':''
+                    },
+                'it':
+                    {'Metacity Window Buttons':'I pulsanti delle finestre di Metacity',
+                     'A simple tool to configure the Metacity window buttons':
+                     'Uno strumento semplice per configurare i pulsanti della finestra in Metacity',
+                     '_File':'_File',
+                     '_Settings':'_Impostazioni',
+                     '_Help':'_Aiuto',
+                     'Lucid style':'Stile Lucid',
+                     'Karmic style':'Stile Karmic',
+                     'Mac OS X style':'Stile Mac OS X',
+                     'Restore style':'Ripristinare lo stile',
+                     'translator-credits':''
+                    },
+                'pt':
+                    {'Metacity Window Buttons':'Botões de Janelas Metacity',
+                     'A simple tool to configure the Metacity window buttons':
+                     'Um programa simples para configurar os botões nas janelas',
+                     '_File':'_Ficheiro',
+                     '_Settings':'_Definições',
+                     '_Help':'_Ajuda',
+                     'Lucid style':'Estilo Lucid',
+                     'Karmic style':'Estilo Karmic',
+                     'Mac OS X style':'Estilo Mac OS X',
+                     'Restore style':'Restaurar estilo',
+                     'translator-credits':'Edgar Castelo <edgarinventor@gmail.com>'
+                    }
+                }
+
+        self.comboboxes = {"combobox1" : None,
+                           "combobox2" : None,
+                           "combobox3" : None,
+                           "combobox4" : None,
+                           "combobox5" : None,
+                           "combobox6" : None,
+                           "combobox7" : None,
+                           "combobox8" : None}
+        # Settings
+        self._settings = {"lucid" : (None, ''),
+                          "karmic" : (None, ''),
+                          "mac" : (None, ''),
+                          "initial" : (None, '')}
+
+        self._lock_update = False
+        self._disable_gconf = False
+
+        self.set_title(_(APP_NAME))
+        self.set_icon_name('preferences-desktop-theme')
+
+        agroup = gtk.AccelGroup()
+        self.add_accel_group(agroup)
+
+        vbox = gtk.VBox()
+
+        menubar = gtk.MenuBar()
+        hbox = gtk.HBox(False, 8)
+        hbox.set_border_width(8)
+
+        # Top level menu items
+        file_item = gtk.MenuItem(_("_File"))
+        settings_item = gtk.MenuItem(_("_Settings"))
+        help_item = gtk.MenuItem(_("_Help"))
+
+        file_menu = gtk.Menu()
+        settings_menu = gtk.Menu()
+        help_menu = gtk.Menu()
+
+        file_menu_quit = gtk.ImageMenuItem(gtk.STOCK_QUIT, agroup)
+        key, mod = gtk.accelerator_parse("Q")
+        file_menu_quit .add_accelerator("activate", agroup, key, mod, gtk.ACCEL_VISIBLE)
+        settings_menu_lucid = gtk.MenuItem(_("Lucid style"))
+        settings_menu_lucid.set_name('lucid')
+        settings_menu_karmic = gtk.MenuItem(_("Karmic style"))
+        settings_menu_karmic.set_name('karmic')
+        settings_menu_mac = gtk.MenuItem(_("Mac OS X style"))
+        settings_menu_mac.set_name('mac')
+        settings_menu_initial = gtk.MenuItem(_("Restore style"))
+        settings_menu_initial.set_name('initial')
+        help_menu_about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+
+        buttons = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING)
+        empty_btn = self._get_pixbuf(EMPTY_ICON)
+        menu_btn = self._get_pixbuf(MENU_ICON)
+        maximize_btn = self._get_pixbuf(MAXIMIZE_ICON)
+        minimize_btn = self._get_pixbuf(MINIMIZE_ICON)
+        close_btn = self._get_pixbuf(CLOSE_ICON)
+        buttons.append([empty_btn, ''])
+        buttons.append([menu_btn, 'Menu'])
+        buttons.append([maximize_btn, 'Maximize'])
+        buttons.append([minimize_btn, 'Minimize'])
+        buttons.append([close_btn, 'Close'])
+
+        # initializing each ComboBox
+        for name in self.comboboxes:
+            combobox = gtk.ComboBox()
+            combobox.set_name(name)
+            combobox.set_model(buttons)
+            cell_icon = gtk.CellRendererPixbuf()
+            cell_icon.set_fixed_size(18, -1)
+            cell_text = gtk.CellRendererText()
+            combobox.pack_start(cell_icon, True)
+            combobox.add_attribute(cell_icon, 'pixbuf', 0)
+            combobox.set_active(0)
+            combobox.connect("changed", self.on_combobox_change)
+            self.comboboxes[name] = combobox
+
+        label = gtk.Label()
+        label.set_size_request(140, -1)
+
+
+        self.add(vbox)
+        vbox.pack_start(menubar, expand=False)
+        vbox.pack_start(hbox, expand=True, fill=False)
+
+        menubar.append(file_item)
+        menubar.append(settings_item)
+        menubar.append(help_item)
+
+        file_item.set_submenu(file_menu)
+        settings_item.set_submenu(settings_menu)
+        help_item.set_submenu(help_menu)
+
+        file_menu.prepend(file_menu_quit)
+        settings_menu.prepend(settings_menu_initial)
+        settings_menu.prepend(settings_menu_mac)
+        settings_menu.prepend(settings_menu_karmic)
+        settings_menu.prepend(settings_menu_lucid)
+        help_menu.prepend(help_menu_about)
+
+        names = self.comboboxes.keys()
+        names.sort()
+        for name in names:
+            hbox.pack_start(self.comboboxes[name])
+
+        hbox.pack_start(label)
+        # to center the label
+        hbox.reorder_child(label, 4)
+
+        # Connecting signals 
+        self.connect("delete_event", self.on_window_destroy)
+        file_menu_quit.connect("activate", self.on_window_destroy)
+        settings_menu_lucid.connect("activate", self.on_setting_activate)
+        settings_menu_karmic.connect("activate", self.on_setting_activate)
+        settings_menu_mac.connect("activate", self.on_setting_activate)
+        settings_menu_initial.connect("activate", self.on_setting_activate)
+        help_menu_about.connect("activate", self.on_about_activate)
+
+        initial_layout = self._get_layout_from_gconf()
+        self._disable_gconf = True
+        self._load_layout(initial_layout)
+        self._disable_gconf = False
+
+        self._settings['lucid'] = (settings_menu_lucid, 'close,minimize,maximize:')
+        self._settings['karmic'] = (settings_menu_karmic, 'menu:minimize,maximize,close')
+        self._settings['mac'] = (settings_menu_mac, 'close,maximize,minimize:menu')
+        self._settings['initial'] = (settings_menu_initial, initial_layout)
+        self._update_menu_settings(initial_layout)
+
+        self.show_all()
+
+    def on_combobox_change(self, cbbox_selected, data=None):
+        # We use _lock_update to avoid recursion on combobox changes
+        if self._lock_update: return
+
+        name_selected = cbbox_selected.get_name()
+        status_selected = cbbox_selected.get_active()
+        if status_selected > 0:
+            for name, combobox in self.comboboxes.items():
+                status = combobox.get_active()
+                if status_selected == status and name_selected != name:
+                    self._lock_update = True
+                    combobox.set_active(0)
+        if not self._disable_gconf:
+            layout = self._generate_string()
+            self._set_layout_to_gconf(layout)
+            self._update_menu_settings(layout)
+        self._lock_update = False
+
+    def on_setting_activate(self, menu_item, data=None):
+        name = menu_item.get_name()
+        layout = self._settings[name][1]
+        self._disable_gconf = True
+        self._load_layout(layout)
+        self._disable_gconf = False
+        self._set_layout_to_gconf(layout)
+        self._update_menu_settings(layout)
+
+    def on_about_activate(self, menuitem, data=None):
+        _ = self._translate_text
+        about = gtk.AboutDialog()
+        about.set_program_name(_(APP_NAME))
+        about.set_version(VERSION)
+        about.set_copyright("© 2010 %s" % AUTHOR)
+        about.set_translator_credits(_("translator-credits"))
+        about.set_comments(_(APP_DESC))
+        about.set_website(_(APP_URL))
+        about.set_icon_name('preferences-desktop-theme')
+        about.set_logo_icon_name('preferences-desktop-theme')
+        about.run()
+        about.destroy()
+
+    def on_window_destroy(self, widget, data=None):
+        """Method to handle the close event."""
+        gtk.main_quit()
+
+    def _update_menu_settings(self, layout):
+        """Enable or disable selected menu items from Settings menu."""
+        for name, (menu_item, setting) in self._settings.items():
+            if layout == setting:
+                menu_item.set_sensitive(False)
+            else:
+                menu_item.set_sensitive(True)
+
+    def _generate_string(self):
+        """
+        This method generates and returns a string used by Metacity in GConf.
+        comboboxes is used to read the status of the buttons.
+        An example of the return string is: menu:minimize,maximize,close
+        """
+        # FIXME: I know that this method can be improved
+        keys = self.comboboxes.keys()
+        keys.sort()
+        state = [self.comboboxes[name].get_active() for name in keys]
+        for i, elem in enumerate(state):
+            if elem == 0:
+                state[i] = ''
+            elif elem == 1:
+                state[i] = 'menu'
+            elif elem == 2:
+                state[i] = 'maximize'
+            elif elem == 3:
+                state[i] = 'minimize'
+            elif elem == 4:
+                state[i] = 'close'
+
+        left = state[:4]
+        left = [x for x in left if x != '']
+        right = state[4:]
+        right = [y for y in right if y != '']
+
+        return "%s:%s" % (",".join(left), ",".join(right))
+
+    def _get_layout_from_gconf(self):
+        """
+        Returns a string with the current button layout stored in gconf.
+        e.g: menu:minimize,maximize,close
+        """
+        client = gconf.client_get_default()
+        string = client.get_string('/apps/metacity/general/button_layout')
+        return string
+
+    def _set_layout_to_gconf(self, layout):
+        """Set the button layout in gconf."""
+        client = gconf.client_get_default()
+        client.set_string('/apps/metacity/general/button_layout', layout)
+
+    def _load_layout(self, layout):
+        """
+        This method parses a button layout string
+        e.g: menu:minimize,maximize,close
+        to restore the combobox status
+        """
+        left_str = layout.split(':')[0].split(',')
+        right_str = layout.split(':')[1].split(',')
+        right_str.reverse()
+        left = [0, 0, 0, 0]
+        right = [0, 0, 0, 0]
+        for i, elem in enumerate(left_str):
+            if elem == "menu":
+                left[i] = 1
+            elif elem == "maximize":
+                left[i] = 2
+            elif elem == "minimize":
+                left[i] = 3
+            elif elem == "close":
+                left[i] = 4
+        for i, elem in enumerate(right_str):
+            if elem == "menu":
+                right[i] = 1
+            elif elem == "maximize":
+                right[i] = 2
+            elif elem == "minimize":
+                right[i] = 3
+            elif elem == "close":
+                right[i] = 4
+        right.reverse()
+        state = left
+        state.extend(right)
+        for i, value in enumerate(state):
+            if value > 0:
+                self.comboboxes['combobox%d'%(i+1)].set_active(value)
+
+    def _get_pixbuf(self, name):
+        """Returns a gtk.gdk.Pixbuf from a base64 string"""
+        icon_raw = b64decode(name)
+        pixbuf = gtk.gdk.PixbufLoader('png')
+        pixbuf.write(icon_raw)
+        icon_pixbuf = pixbuf.get_pixbuf()
+        pixbuf.close()
+        return icon_pixbuf
+
+    def _translate_text(self, text):
+        """A tiny and poor implementation to translate text."""
+        lang = os.environ.get('LANG', '')
+        lang = lang[:2]
+        if self.languages.has_key(lang):
+            if self.languages[lang].has_key(text):
+                return self.languages[lang][text]
+        return text
+            
+            
+
+# Encoded Base64 icons
+EMPTY_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAX" \
+             "NSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAL" \
+             "EwAACxMBAJqcGAAAAAd0SU1FB9oDCBEiFF3pnMwAAABDSURBVB" \
+             "jTY2AgEjAyMDAw/P//H78iRkYGJgZSAD4TYXIsyIJhM66iKFqV" \
+             "oQ1noyh8eukQTpNRFDIwsVDRjYSCiGgAAEzDF4QcHBm9AAAAAE" \
+             "lFTkSuQmCC"
+MENU_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABH" \
+		    "NCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0" \
+		    "RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADLSU" \
+		    "RBVBiVjZCxasJgFIW/m0KXf0nATg4ddHDIUNAxQ6E4/mvxPXyo" \
+	        "5jX6CglIhzg4CsIfKE1LSDgdjCLSln5wtu9cLsckAWBmCTABYo" \
+		    "7UwFZSAIgGaeq9X4YQ1m3brpqmeSiKYp5l2aOZTYciiff+ue/7" \
+		    "V0kzSZyS53kCPAEJwCKE8HItnQKMgUUExM65D+CNnzkAcQTQdd" \
+		    "1v0pkIqKuqev/DGQH1DfBZluWdc26fpunXpWFmt8Ac2Jgkhgnu" \
+		    "hz8PF5dmwE5SZf8d/BtQJ2efhXgi9gAAAABJRU5ErkJggg=="
+MAXIMIZE_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABm" \
+						"JLR0QA/wD/AP+gvaeTAAAAYklEQVQYV2NkYGBIA2KCgAWk4v//" \
+						"/zPxqWRkZExnwqcAWQ5sIgiAdGHTBLMNrhCkKGzG1VnIildlaM" \
+						"Pdj6Lw6aVD2AwFi6EoZGBC5SLrQpE5OiUVZ1DBFRIMIqDxOE1B" \
+						"thoAsM4VJvSCo7QAAAAASUVORK5CYII="
+MINIMIZE_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABm" \
+                "JLR0QAaQB/APH4dkOkAAAAKElEQVQYV2NgGImAEejpNGI8zgJS" \
+                "9P///5n4FDMyMqYz4VOALEe01QAYUwTV6wMApQAAAABJRU5Erk" \
+                "Jggg=="
+CLOSE_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABm" \
+             "JLR0QAaQB/APH4dkOkAAAAZ0lEQVQYV41QgQ2AMAgD40f+NG+a" \
+             "P3mTUgKmC9O4ZKMpXUlREdniWpEDD50W+ERtVxxgFjG/8ndrdF" \
+             "V1Cph7iR/XdHmZ4voiBpdOy8z+iytus9GDKMYVbkhtiXcT+i6R" \
+             "npNjF78WfgN1NX1rgnV12wAAAABJRU5ErkJggg=="
+
+if __name__ == "__main__":
+
+    mbuttons = MButtons()
+    gtk.main()
+

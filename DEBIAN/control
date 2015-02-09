@@ -1,9 +1,15 @@
 Package: skrypt-mint
-Version: 0.5_lxde-1
-Section: admin 
+Version: 0.9-3
+Section: admin
 Priority: optional
+Homepage: http://linuxmint.pl
 Architecture: all
 Essential: no
-Installed-Size: 40
-Maintainer: mati75 [mati75@op.pl]
-Description: Program konfigująco-instalujący dla Linux Mint 8 Helena LXDE CE
+Installed-Size: 164
+Maintainer: mati75 <mati75@op.pl>
+Depends: python (>=2.6) | python2.6, python-wxgtk2.8, python-wxversion, apt, fakeroot, libopenssl-ruby1.8, libhpricot-ruby1.8, zenity, python-vte
+Recommends: xdg-utils
+Suggests: alien, md5sum
+Description: mintSkrypt is the gtk script for configuration Linux Mint special write for polish users.
+
+

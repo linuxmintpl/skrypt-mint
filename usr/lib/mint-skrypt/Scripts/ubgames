@@ -1,0 +1,12 @@
+#!/bin/bash
+
+                echo "25"
+                sudo sh -c 'echo "deb http://archive.ubuntugames.org ubuntugames main" >> /etc/apt/sources.list'
+                echo "35"
+                apt-get update -y
+		echo "40"
+		apt-get -y upgrade
+		echo "85"
+		apt-get install -f -y
+		echo "100"
+

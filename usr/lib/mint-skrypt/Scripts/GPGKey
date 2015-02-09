@@ -1,0 +1,30 @@
+#! /bin/bash
+
+sudo apt-get update 2> ~/err
+
+num=$(grep 'NO_PUBKEY' ~/err | wc -l)
+str=$(grep 'NO_PUBKEY'  ~/err) 
+tot=$num
+if [ $num != 0 ]; then
+    for (( i=0 ; i<$num ; i++ )); do
+	tmp=${str#*NO_PUBKEY }
+	key=${tmp:0:16}
+	str=${str#*NO_PUBKEY}
+	gpg --keyserver subkeys.pgp.net --recv $key
+	gpg --export --armor $key | sudo apt-key add -
+    done
+fi
+num=0
+num=$(grep 'BADSIG' ~/err | wc -l)
+str=$(grep 'BADSIG'  ~/err) 
+tot=$(( $tot + $num ))
+if [ $num != 0 ]; then
+    for (( i=0 ; i<$num ; i++ )); do
+	tmp=${str#*BADSIG }
+	key=${tmp:0:16}
+	str=${str#*BADSIG}
+	gpg --keyserver subkeys.pgp.net --recv $key
+	gpg --export --armor $key | sudo apt-key add -
+    done
+fi
+rm ~/err

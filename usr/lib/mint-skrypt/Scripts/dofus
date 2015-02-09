@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                           wget http://dl.dropbox.com/u/7948220/dofus.desktop
+                           chmod +x dofus.desktop
+                           mv dofus.desktop /usr/share/applications
+                           wget http://dl.dropbox.com/u/7948220/dofus.png
+                           mv dofus.png /usr/share/pixmaps
+                           wget http://dl.ak.ankama.com/games/dofus2/setup/DofusInstall.run
+                           chmod +x DofusInstall.run
+                           sudo ./DofusInstall.run
+                           rm DofusInstall.run
+

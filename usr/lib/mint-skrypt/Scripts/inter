@@ -1,0 +1,28 @@
+#!/bin/bash
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo apt-get -y --force-yes install amsn
+sudo add-apt-repository ppa:pidgin-developers/ppa
+sudo apt-get -y --force-yes update            
+sudo apt-get -y --force-yes install pidgin pidgin-*
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:portis25/ppa
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install skype
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:chromium-daily/ppa
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install chromium-browser
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:jd-team/jdownloader
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install jdownloader
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo apt-get -y --force-yes install vuze
+sudo apt-get -y --force-yes install amule

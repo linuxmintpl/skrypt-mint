@@ -1,0 +1,9 @@
+#!/bin/sh
+cd /opt
+if [ "i686" = `uname -m` ]; then
+ wget http://j.o2.pl/idi/tlenlinux-7.0.1.71.bin; sudo sh tlenlinux-7.0.1.71.bin
+elif [ "x86_64" = `uname -m` ]; then
+ wget http://j.o2.pl/idi/tlenlinux64-7.0.1.71.bin; sudo sh tlenlinux64-7.0.1.71.bin
+else
+ echo -ne "\033[1mSkrypt obsługuje tylko 32 i 64 bitowego Minta.\033[0m"
+fi

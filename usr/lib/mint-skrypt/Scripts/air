@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                            wget http://airdownload.adobe.com/air/lin/download/latest/AdobeAIRInstaller.bin
+                            chmod 755 AdobeAIRInstaller.bin
+                            sudo ./AdobeAIRInstaller.bin
+                            rm AdobeAIRInstaller.bin
+

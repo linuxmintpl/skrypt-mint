@@ -1,0 +1,12 @@
+#!/bin/bash
+
+                sudo sh -c 'echo "deb http://repository.spotify.com stable non-free" >> /etc/apt/sources.list' 
+                sudo apt-get update -y
+                gpg --keyserver wwwkeys.de.pgp.net --recv-keys 4E9CFF4E
+                gpg --export 4E9CFF4E |sudo apt-key add -
+                sudo apt-get update -y
+		sudo apt-get -y upgrade
+                sudo apt-get -y --force-yes install spotify-client-qt spotify-client-gnome-support
+                wget http://dl.dropbox.com/u/7948220/spotify.desktop
+                chmod +x spotify.desktop
+                mv spotify.desktop /usr/share/applications

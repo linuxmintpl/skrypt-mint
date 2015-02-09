@@ -1,0 +1,18 @@
+#!/bin/bash
+sudo -K
+		( zenity --entry --title 'Hasło' --text 'Proszę podać swoje hasło' --entry-text '' --hide-text
+		) | sudo -Su root /bin/echo '0'
+		if [ $? != '0' ] ; then
+			zenity --error --title 'Błąd' --text 'Nieprawidłowe hasło'
+			exit 0
+		fi
+		while [ true ] ; do
+			sudo -Su root /bin/echo '0' > /dev/null 2> /dev/null
+			sleep 240
+		done &
+gksu ln -s ~/.themes /root/.themes
+gksu ln -s ~/.icons /root/.icons
+gksu ln -s ~/.fonts /root/.fonts
+cd /usr/lib/mint-skrypt
+python ./splash.py
+gksudo ./skrypt

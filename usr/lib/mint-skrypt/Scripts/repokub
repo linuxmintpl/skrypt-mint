@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+echo "-$1
+-$2"
+case "$1" in
+Update)
+	if [ "$2" == "Gui" ]; then # Grafical Interface
+		(	
+		echo "#Updating Keys..."	
+		bash "/Scripts/GPGKey"
+		echo "25"
+		add-apt-repository ppa:kubuntu-ppa/ppa
+                add-apt-repository ppa:samrog131/ppa
+		echo "50"
+		apt-get update -y 2>&1 | sed -u s/^/#/g
+		echo "75"
+		apt-get upgrade -y 2>&1 | sed -u s/^/#/g
+		echo "85"
+		apt-get install -f -y 2>&1 | sed -u s/^/#/g
+		echo "100") | zenity --window-icon="/Images/logo.png" --progress --percentage=0 --title="Update" --auto-close
+	else # No Gui
+		bash "/Scripts/GPGKey"
+		apt-get update
+		apt-get upgrade -y
+		apt-get install -f -y
+	fi
+esac

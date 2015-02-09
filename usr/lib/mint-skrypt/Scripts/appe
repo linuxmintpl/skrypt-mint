@@ -1,0 +1,25 @@
+#!/bin/bash
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:epidermis/ppa 
+sudo apt-get -y --force-yes update                
+sudo apt-get -y --force-yes install epidermis
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:gdm2setup/gdm2setup 
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install python-gdm2setup
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:s-lagui 
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install gstyle
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:am-monkeyd/nautilus-elementary-ppa  
+sudo apt-get -y --force-yes update
+sudo add-apt-repository ppa:elementaryart/ppa  
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install gtk2-engines-murrine humanity-icon-theme elementary-theme elementary-icon-theme

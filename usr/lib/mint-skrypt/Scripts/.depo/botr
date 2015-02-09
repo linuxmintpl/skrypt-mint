@@ -1,0 +1,18 @@
+#!/bin/bash
+
+UNAME=`uname -a`
+DISTRIB_ID=`cat /etc/lsb-release | grep DISTRIB_ID | awk -F= '{print $2}'`
+DISTRIB_RELEASE=`cat /etc/lsb-release | grep DISTRIB_RELEASE | awk -F= '{print $2}'`
+DISTRIB_CODENAME=`cat /etc/lsb-release | grep DISTRIB_CODENAME | awk -F= '{print $2}'`
+
+#---------------------------------------------- 
+# Action: Right Buttons
+#---------------------------------------------- 
+ 
+gconftool-2 --set '/apps/metacity/general/button_layout' --type string 'menu:minimize,maximize,close'
+
+#---------------------------------------------- 
+# Action: Limpiar cache de fuentes
+#---------------------------------------------- 
+ sudo fc-cache
+

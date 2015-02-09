@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Eve Installer 0.9.2
+#
+# Last Update: 15/07/10
+
+TITLE="Eve Installer 0.9.2"
+
+OPTIONS=$(zenity --list --width 380 --height 260 --title "$TITLE" --text "Buttons or system icons" --checklist --hide-column 2 --column "" --column "" --column "Items" --print-column 2 --separator "," \
+FALSE 1 "Show Icon 'TEAM' on the desktop" \
+FALSE 2 "Show Icon 'PERSONAL FOLDER' on the desktop" \
+FALSE 3 "Show Icon 'TRASH' on the desktop" \
+FALSE 4 "Show Icon 'NETWORKS' on the desktop" \
+FALSE 5 "Window Buttons" \
+FALSE 6 "Lost icons in system")
+
+if [ "$OPTIONS" = "" ]; then
+	exit 0
+fi
+
+(
+
+DOIT=$(echo $OPTIONS | grep "1")
+if [ -n "$DOIT" ] ; then
+	gconftool-2 --type Boolean --set /apps/nautilus/desktop/computer_icon_visible True
+fi
+
+DOIT=$(echo $OPTIONS | grep "2")
+if [ -n "$DOIT" ] ; then
+	gconftool-2 --type Boolean --set /apps/nautilus/desktop/home_icon_visible True
+fi
+
+DOIT=$(echo $OPTIONS | grep "3")
+if [ -n "$DOIT" ] ; then
+	gconftool-2 --type Boolean --set /apps/nautilus/desktop/trash_icon_visible True
+fi
+
+DOIT=$(echo $OPTIONS | grep "4")
+if [ -n "$DOIT" ] ; then
+	gconftool-2 --type Boolean --set /apps/nautilus/desktop/network_icon_visible True
+fi
+
+
+DOIT=$(echo $OPTIONS | grep "5")
+if [ -n "$DOIT" ] ; then
+        cd /usr/share/eveinstaller/Scripts/
+        chmod +x mwbuttons
+        ./mwbuttons
+fi
+
+DOIT=$(echo $OPTIONS | grep "6")
+if [ -n "$DOIT" ] ; then
+	gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True && killall gnome-panel;
+
+
+fi
+)
+# End of Script

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                           sudo sh -c 'echo "deb http://apt.telebision.com telebision main" >> /etc/apt/sources.list'
+                           wget -q -O- http://apt.telebision.com/public.key | sudo apt-key add -  
+                           sudo apt-get update
+                           sudo sh -c 'echo "deb http://ftp.de.debian.org/debian lenny main" >> /etc/apt/sources.list'
+                           sudo apt-get update
+                           sudo apt-get -y --force-yes install telebision
+

@@ -1,0 +1,122 @@
+#! /usr/bin/env ruby
+
+require 'hpricot'
+require 'open-uri'
+require 'net/https'
+require 'openssl'
+
+
+module OpenSSL
+module SSL
+remove_const :VERIFY_PEER
+end
+end
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+puts "\n"
+puts "Write The Repository to search: "
+
+#search = then variable for the users input.  gets is what gives the option for input, and .chomp makes it the new variable (and not just nothingness like it was before the input). 
+search=gets.chomp
+
+#unfortunately, html addresses can't handle spaces.  whenever they see one, they replace it with a plus, so im doing the same.
+if search.include? ' '
+search.sub!(' ','+')
+end
+
+#This opens the page with hpricot. Whatever you put in for 'search' is put in where the search would go in the html. also uses the links.
+doc = Hpricot( open( 'https://launchpad.net/ubuntu/+ppas?name_filter=' + search) )
+
+#getting some data from the website.  tds are the name of the ppas, and links are the 
+tds=(doc/"/html/body/div/div[3]/div/div[2]/div[2]/table[2]/tbody/tr/td/a")
+linkz =(doc/"/html/body/div/div[3]/div/div[2]/div[2]/table[2]/tbody/tr/td/a")
+
+#this array is for the array of html paths needed for the installation choice of ppa
+sweetassarray = Array.new
+
+#this makes a nice list of data needed for the users choice later on.
+(linkz).inject([]) do |links,anchor|
+  sweetassarray << anchor.attributes['href']
+end
+
+#creating an array to be used later, to keep the names / numbers of ppas orderly.
+myarray = Array.new
+
+#gets the ppa names, puts them into the array 'myarray'
+ppas=(tds/"///<td>").each do |k|
+myarray << k
+end
+
+
+#if there were any ppas, it prints the amount, adds a blank line, prints the ppas, prints another line, and asks the user which one they want to install.
+#the if else statement has to be long, because the program needs to end if no results are found.
+if ppas.any?
+puts "\n"
+puts "¡Good news! Found #{ppas.count} results!"
+puts "\n"
+
+#takes each unit in the myarray array, and gets the name and number (or, "index") and prints them.
+#remember, indexes start with 0, so you need to say +1 to start on one instead of zero.
+myarray.each_with_index do |ppaname, index|
+puts "[#{index+1}] #{ppaname}"
+end
+
+puts "\n"
+puts "Write the number chosen repository"
+
+
+
+#they put in a number, i convert it to an integer.
+givethemwhattheywant = gets.chomp.to_i
+
+#from there, i use that integer to give me the area of the sweetassarray (the one that has all the html directories), of the corresponding ppa.
+correct = sweetassarray[givethemwhattheywant-1]
+
+#more of the same
+seconddoc = Hpricot( open( 'https://launchpad.net' + correct) )
+thefinal = (seconddoc/"/html/body/div/div[3]/div/div/div[3]/div/div/p/strong").inner_html
+
+puts "Are you sure you want to add " + thefinal + "\n"" your repositories? [Y/N]"
+answerlol=gets.chomp
+
+if answerlol.include? 'Y'
+system ('sudo add-apt-repository ' + thefinal)
+system ('sudo apt-get update')
+system ('sudo apt-get -y upgrade')
+else
+end
+
+if answerlol.include? 'y'
+system ('sudo add-apt-repository ' + thefinal)
+system ('sudo apt-get update')
+system ('sudo apt-get -y upgrade')
+else
+end
+
+puts "\n"
+puts "Want to install additional software? [Y/N]"
+answerlol=gets.chomp
+
+if answerlol.include? 'Y'
+puts "Write the software to install: "
+name=gets.chomp
+system ('sudo apt-get install -y ' + name)
+system ('sudo apt-get update')
+else
+end
+
+if answerlol.include? 'y'
+puts "Write the software to install: "
+name=gets.chomp
+system ('sudo apt-get install -y ' + name)
+system ('sudo apt-get update')
+else
+end
+
+#creates the last array
+lastarray = Array.new
+
+else
+puts "Repository was not found. Try to improve your search."
+end
+
+

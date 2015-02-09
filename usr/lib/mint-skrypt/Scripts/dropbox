@@ -1,0 +1,13 @@
+#!/bin/bash
+
+		echo "25"
+                add-apt-repository 'deb http://linux.dropbox.com/ubuntu karmic main' 
+                sudo gpg --keyserver pgp.mit.edu --recv-keys 3565780E
+                echo "35"
+                apt-get update -y
+		echo "40"
+		apt-get -y --force-yes install nautilus-dropbox
+		echo "85"
+		apt-get install -f -y
+		echo "100"
+

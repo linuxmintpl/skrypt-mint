@@ -1,0 +1,35 @@
+#!/bin/bash
+
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+wget http://deb.playonlinux.com/playonlinux_lucid.list -O /etc/apt/sources.list.d/playonlinux.list
+sudo apt-get update
+sudo apt-get -y --force-yes install playonlinux 
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:pzinin/winegame
+sudo apt-get update
+sudo apt-get -y --force-yes install winegame 
+wget http://dl.dropbox.com/u/7948220/winegame.desktop
+chmod +x winegame.desktop
+mv winegame.desktop /usr/share/applications
+wget http://dl.dropbox.com/u/7948220/wineg.png
+mv wineg.png /usr/share/pixmaps
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sh Scripts/ubgames
+sudo apt-get -y update
+sudo apt-get -y --force-yes install mupen64plus
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sh Scripts/Playdeb
+sudo apt-get -y update
+sudo apt-get -y --force-yes install snes9x-gtk 
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo apt-get -y --force-yes install opensonic
+sudo apt-get -y --force-yes install freecol
+sudo apt-get -y --force-yes install neverball
+sudo apt-get -y --force-yes install frozen-bubble

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                           sudo sh -c 'echo "deb http://packages.enlightenment.org/ubuntu lucid main" >> /etc/apt/sources.list'
+                           sudo wget http://packages.enlightenment.org/repo.key -O - | sudo apt-key add -
+                           sudo apt-get update -y
+                           sudo aptitude install xorg e17 wicd lxterminal gnome-icon-theme mousepad emodule-places emodule-tclock emodule-calendar unrar rar xarchiver gpicview rungetty
+		           sudo apt-get -y upgrade
+                     
+

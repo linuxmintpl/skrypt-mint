@@ -1,0 +1,46 @@
+#!/bin/bash
+
+sudo apt-get -y upgrade
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:awn-testing 
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install avant-window-navigator-trunk
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:globalmenu-team/ppa   
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install gnome-globalmenu 
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:gloobus-dev/covergloobus   
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install covergloobus 
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo add-apt-repository ppa:dockbar-main/ppa   
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install dockbar dockbarx 
+sudo apt-get install -f 
+sudo dpkg --configure -a 
+sudo apt-get -y --force-yes install conky 
+sudo apt-get -y --force-yes install tint2
+sudo apt-get -y --force-yes install startupmanager
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:compiz   
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install simple-ccsm compizconfig-settings-manager emerald fusion-icon
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:tualatrix   
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install ubuntu-tweak
+sudo apt-get install -f 
+sudo dpkg --configure -a
+sudo add-apt-repository ppa:debfx/virtualbox
+sudo apt-get -y --force-yes update
+sudo apt-get -y --force-yes install virtualbox-ose
+                           
+                     
+

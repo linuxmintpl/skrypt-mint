@@ -1,0 +1,38 @@
+#!/bin/sh 
+                           cd /tmp 
+                           wget http://dl.dropbox.com/u/7948220/img.tar 
+                           cp img.tar /usr/share/icons 
+                           cd /usr/share/icons 
+                           tar -xvf img.tar
+                           chown -R $USER:$USER /usr/share/icons/img
+                           cd 
+                           cd /tmp
+                           wget http://dl.dropbox.com/u/7948220/MarTV-EN
+                           chmod +x MarTV-EN
+                           cp MarTV-ES /usr/bin 
+                           wget http://dl.dropbox.com/u/7948220/MarTV-EN.desktop
+                           chmod +x MarTV-EN.desktop
+                           cp MarTV-EN.desktop /usr/share/applications 
+                           wget http://download.easetuner.com/download/sp-auth.tgz 
+                           tar xzvf sp-auth.tgz 
+                           cp sp-auth/sp-sc-auth /usr/bin/ 
+                           cd /tmp
+                           wget http://dl.dropbox.com/u/7948220/sp-sc-auth
+                           mv sp-sc-auth /usr/bin/ 
+                           sudo add-apt-repository ppa:chromium-daily/ppa
+                           sudo apt-get -y update
+                           sudo apt-get -y --force-yes install chromium-browser libvpx0
+                           cd /tmp
+                           apt-get -y --force-yes install mplayer.*
+                           apt-get -y --force-yes install vlc.*  
+                           apt-get -y --force-yes install gxine.*
+                           apt-get -y --force-yes install totem.*                            
+                           apt-get -y --force-yes install chromium 
+                           sudo sh -c 'echo "deb http://ppa.launchpad.net/jason-scheunemann/ppa/ubuntu karmic main" >> /etc/apt/sources.list' 
+                           sudo sh -c 'echo "deb-src http://ppa.launchpad.net/jason-scheunemann/ppa/ubuntu karmic main" >> /etc/apt/sources.list' 
+                           sudo wget -q 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x932062C9CD30EE56' -O - | sudo apt-key add 
+                           sudo apt-get update -y
+		           sudo apt-get -y upgrade
+                           sudo apt-get -y --force-yes install sopcast-player libstdc++5 
+
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ ! -f ".Checks/murmrepo" ]; then # First run
+	zenity --info --window-icon="/Images/logo.png" --text="Activate main, universe, restricted and multiverse repository."
+	gksu --desktop /usr/share/applications/software-properties.desktop /usr/bin/software-properties-gtk
+	touch ".Checks/murmrepo"
+fi
+if [ ! -e /etc/apt/sources.list.d/medibuntu.list ]; then # Install Medibuntu
+	echo -e "\033[31;1mInstallation of Medibuntu Repository...\033[0m"
+	wget http://www.medibuntu.org/sources.list.d/$(lsb_release -cs).list \
+ --output-document=/etc/apt/sources.list.d/medibuntu.list &&
+sudo apt-get -q update &&
+sudo apt-get --yes -q --allow-unauthenticated install medibuntu-keyring
+fi

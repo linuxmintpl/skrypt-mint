@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+# EveInstaller 0.9.1
+#
+# Last Update: 21/06/10
+
+
+nombre=$(zenity --title "Eve GPG error " --width=300 --height=100 --entry --text="Put the 16 digit error")
+
+gpg --keyserver keyserver.ubuntu.com --recv $nombre
+gpg --export --armor $nombre | sudo apt-key add -
+sudo apt-get update
+

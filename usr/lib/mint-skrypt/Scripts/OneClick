@@ -1,0 +1,51 @@
+#!/bin/bash
+
+
+echo "-$1
+-$2"
+case "$1" in
+Update)
+	if [ "$2" == "Gui" ]; then # Grafical Interface
+		(	
+		echo "#Updating Keys..."	
+		bash "/Scripts/GPGKey"
+		echo "25"
+		apt-get update 2>&1 | sed -u s/^/#/g
+		echo "50"
+		apt-get upgrade -y 2>&1 | sed -u s/^/#/g
+		echo "75"
+		apt-get install -f -y 2>&1 | sed -u s/^/#/g
+		echo "100") | zenity --window-icon="/Images/logo.png" --progress --percentage=0 --title="Update" --auto-close
+	else # No Gui
+		bash "/Scripts/GPGKey"
+		apt-get update
+		apt-get upgrade -y
+		apt-get install -f -y
+	fi
+;;
+Clean)
+	if [ "$2" == "Gui" ]; then # Grafical Interface
+		(
+		echo "#Removing Old Packages..."
+		bash "/Scripts/Cleaner" oldpack
+		echo "25"
+		echo "#Removing Unused Files..."
+		bash "/Scripts/Cleaner" trashfile
+		echo "50"
+		echo "#Emptying Trash..."
+		bash "/Scripts/Cleaner" trash
+		echo "75"
+		echo "#Removing History..."
+		bash "/Scripts/Cleaner" recents
+		echo "100") | zenity --window-icon="/Images/logo.png" --progress --percentage=0 --title="Clean" --auto-close
+	else # No Gui
+		bash "/Scripts/Cleaner" oldpack
+		bash "/Scripts/Cleaner" trashfile
+		bash "/Scripts/Cleaner" trash
+		bash "/Scripts/Cleaner" recents
+	fi
+;;
+*)
+	exit
+;;
+esac

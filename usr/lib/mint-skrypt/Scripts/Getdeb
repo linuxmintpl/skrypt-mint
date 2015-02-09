@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                           sudo sh -c 'echo "deb http://archive.getdeb.net/ubuntu lucid-getdeb apps" >> /etc/apt/sources.list'
+                           sudo wget -q -O- http://archive.getdeb.net/getdeb-archive.key | sudo apt-key add -
+                           sudo apt-get update -y
+		           sudo apt-get -y upgrade
+                     
+

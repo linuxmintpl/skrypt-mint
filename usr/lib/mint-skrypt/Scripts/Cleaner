@@ -1,0 +1,56 @@
+#!/bin/bash
+
+case "$1" in
+oldpack)
+	echo ""
+;;
+recents)
+
+	if [ -d "$HOME/.recently-used.xbel" ]; then # Check for "Disable Recents" Option
+		rm -rf "$HOME/.recently-used.xbel"
+	fi
+	if [ -f "$HOME/.recently-used.xbel" ]; then
+		mv "$HOME/.recently-used.xbel" "$HOME/.recently-used.xbel.bak"
+	fi
+	if [ -f "$HOME/.recently-used" ]; then
+		mv "$HOME/.recently-used" "$HOME/.recently-used.bak"
+	fi
+	touch "$HOME/.recently-used.xbel"
+	echo "<?xml version="1.0" encoding="UTF-8"?>\n<xbel version="1.0"\nxmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"\nxmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"\n></xbel>\n
+ " > "$HOME/.recently-used.xbel"
+	chmod a+xwr "$HOME/.recently-used.xbel"
+;;
+temp)
+	rm -rf "/tmp/*"
+;;
+thumb)
+	rm -rf "$HOME/.thumbnails/*"
+;;
+trash)
+	rm -r "$HOME/.local/share/Trash/files"
+;;
+trashfile)
+	echo "No Removal for TrashFiles."
+	#find "$HOME" -name "*~" -print0|xargs -0 /bin/rm -f
+	#find "$HOME" -name "Desktop.ini" -print0|xargs -0 /bin/rm -f
+	#find "$HOME" -name "Thumbs.db" -print0|xargs -0 /bin/rm -f
+;;
+trashlib)
+	zenity --question --window-icon="/Images/logo.png" --text "Do you really want to remove the orphan libraries? (Warning: Dangerous Command!"
+	if [ $? -eq 0 ]; then
+		if [ ! "$(which deborphan)" ]; then # Missing Dependency
+			apt-get -y install deborphan
+		fi
+		apt-get -y --purge remove `deborphan`
+	fi
+;;
+trashlibdev)
+	zenity --question --window-icon="/Images/logo.png" --text "Do you really want to remove the orphan development libraries? (Warning: Dangerous Command!"
+	if [ $? -eq 0 ]; then
+		if [ ! "$(which deborphan)" ]; then # Missing Dependency
+			apt-get -y install deborphan
+		fi
+		apt-get -y --purge remove `deborphan --libdev`
+	fi
+;;
+esac

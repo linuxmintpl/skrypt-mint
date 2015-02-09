@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+                           sudo apt-get install -f 
+                           sudo dpkg --configure -a 
+                           sudo sh -c 'echo "deb http://packages.unknown-horizons.org/lucid weekly main" >> /etc/apt/sources.list'
+                           sudo wget http://deb.unknown-horizons.org/key -O- | sudo apt-key add -
+                           sudo apt-get update -y
+		           sudo apt-get -y upgrade
+                     
+
