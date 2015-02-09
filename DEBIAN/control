@@ -1,0 +1,9 @@
+Package: skrypt-mint
+Version: 0.4.4
+Section: admin 
+Priority: optional
+Architecture: all
+Essential: no
+Installed-Size: 40
+Maintainer: mati75 [mati75@op.pl]
+Description: Program konfigująco-instalujący dla Linux Mint 8 Helena
