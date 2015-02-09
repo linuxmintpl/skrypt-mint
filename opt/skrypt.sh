@@ -13,8 +13,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#Copyright (C) 09.01.2010  mati75 & Linux Mint Poland team
-#wersja 0.4.4
+#Copyright (C) 23.04.2010  mati75 & Linux Mint Poland team
+#wersja 0.5
 
 konfig() {
 clear
@@ -26,7 +26,8 @@ echo "1. Konfiguracja systemu"
 echo "2. Instalacja programów"
 echo "3. Zobacz naszą stronę"
 echo "4. Nie możesz rozwiązać problemu - zapraszamy na nasze forum "
-echo "5. Zakończ"
+echo "5. O programie"
+echo "0. Zakończ"
 echo -n "Wybierz jedną z opcji: "
 
 read ki
@@ -53,14 +54,17 @@ forum
 powrot=powrot
 ;;
 
-
 5 )
+inf
+;;
+
+0 )
 pod
 exit 0
 ;;
 	* )
 powrot=powrot
-echo -e "\033[0;31mNieprawidłowe polecenie\033[0m\n"
+echo "\033[0;31mNieprawidłowe polecenie\033[0m\n"
 sleep 1
 	;;
 esac
@@ -75,9 +79,8 @@ while [ "$powrot" = powrot ] ; do
 echo  "\033[1mKonfiguracja systemu Linux Mint 8\033[0m"
 echo "1. Zainstaluj sterowniki do karty graficznej"
 echo "2. Ustaw rozdzielczość ekranu"
-echo "3. Ustaw ikony menu"
-echo "4. Ustaw efekty Compiz Fusion "
-echo "5. Skonfiguruj zaporę systemową "
+echo "3. Skonfiguruj zaporę systemową "
+echo "4. Zmień wygląd okien"
 echo "0. Powrót do głównego menu"
 echo -n "Wybierz jedną z opcji: "
 
@@ -96,17 +99,12 @@ powrot=powrot
 ;;
 
 3 )
-desk
+firewall
 powrot=powrot
 ;;
 
 4 )
-compiz
-powrot=powrot
-;;
-
-5 )
-firewall
+okna
 powrot=powrot
 ;;
 
@@ -117,7 +115,7 @@ powrot=powrot
 
 	* )
 powrot=powrot
-echo -e "\033[0;31mNieprawidłowe polecenie\033[0m\n"
+echo "\033[0;31mNieprawidłowe polecenie\033[0m\n"
 sleep 1
 	;;
 
@@ -142,9 +140,8 @@ echo "10. Zainstaluj pakiet internetowy Sea Monkey"
 echo "11. Zainstaluj klient sieci irc - XChat"
 echo "12. Zainstaluj multikomunikator - Pidgin"
 echo "13. Zainstaluj conky - tekstowy informator o systemie"
-echo "14. Dostosuj system do netbooka"
-echo "15. Zaistaluj Google Chrome"
-echo "16. Czyszcznie systemu"
+echo "14. Zaistaluj Google Chrome"
+echo "15. Czyszcznie systemu"
 echo "0. Powrót do głównego menu"
 echo "\033[0;31mUwaga! Ta cześć wymaga podania hasła, jeśli zostaniesz poproszony(na) podaj je\033[0m\n"
 echo -n "Wybierz aplikacje do zainstalowania: "
@@ -219,16 +216,11 @@ powrot=powrot
 ;;
 
 14 )
-netbook
-powrot=powrot
-;;
-
-15 )
 chrome
 powrot=powrot
 ;;
 
-16 )
+15 )
 clean
 powrot=powrot
 ;;
@@ -236,7 +228,7 @@ powrot=powrot
 0 )
 konfig;;
 	* )
-echo -e "\033[0;31mNieprawidłowe polecenie\033[0m\n"
+echo "\033[0;31mNieprawidłowe polecenie\033[0m\n"
 	;;
 
 	esac 
@@ -280,9 +272,9 @@ sudo apt-get update && sudo apt-get -y --force-yes install kadu
 
 tlen() {
 if [ "i686" = `uname -m` ]; then
- wget http://j.o2.pl/idi/tlenlinux-7.0.1.57.bin; sudo sh tlenlinux-7.0.1.57.bin
+ wget http://j.o2.pl/idi/tlenlinux-7.0.1.63.bin; sudo sh tlenlinux-7.0.1.63.bin
 elif [ "x86_64" = `uname -m` ]; then
- wget http://j.o2.pl/idi/tlenlinux64-7.0.1.57.bin; sudo sh tlenlinux64-7.0.1.57.bin
+ wget http://j.o2.pl/idi/tlenlinux64-7.0.1.63.bin; sudo sh tlenlinux64-7.0.1.63.bin
 else
  echo -ne "\033[1mSkrypt obsługuje tylko 32 i 64 bitowego Minta.\033[0m"
 fi
@@ -302,19 +294,36 @@ ster() {
 }
 
 ekra() {
-gnome-display-properties
+lxrandr
 }
 
-compiz() {
-ccsm 
+okna() {
+lxappearance
 }
 
 firewall() { 
 gksu gufw
 }
 
-desk() { 
-mintdesktop
+inf() {
+
+echo "\033[1m Skrypt konfiguracjno-instalacyjny dla Linux Mint 8 Helena LXDE CE \033[0m "
+echo "
+Wersja: 0.5
+Autor: mati75 & Linux Mint Poland Team
+Współpraca: sir_lucjan
+Licencja: Gnu GPL v3
+
+Za pomocą tego skryptu zainstalujesz programy najcześciej używane i polecane
+przez społeczność. Również za jego pomocą skonfigurujesz system.
+
+Serdeczne podziękowania dla devilroot.pl za hosting i serwer dla repozytorium.
+
+Masz problem pisz na naszym forum http://www.forum.linuxmint.pl 
+lub kanale irc #linuxmint-pl w sieci freenode"
+read enter;
+clear;
+$konfig
 }
 
 opera() {
@@ -337,11 +346,6 @@ conky() {
 sudo apt-get -y --force-yes install conky-all
 }
 
-netbook() {
-sudo apt-get -y --force-yes  install ubuntu-netbook-remix 
-}
-
-
 clean() {
 sudo apt-get autoremove &&  sudo apt-get clean && sudo apt-get autoclean
 }
@@ -360,23 +364,23 @@ sleep 1
 }
 
 pod() {
-echo "\E[033[0;34mDziękujemy za wybranie naszego systemu. Życzymy udanej pracy.\033[0m\n"
+echo "\033[0;34mDziękujemy za wybranie naszego systemu. Życzymy udanej pracy.\033[0m\n"
 sleep 1
 }
 
-echo "\E[033[1;37;42m
+echo "\033[1;32m
   waawaawawaawawaa% 
   WQQQQQQWQQQQWQWQQmc           Skrypt konfiguracjno-instalacyjny
-  WQQQQQQQQQQQQQQQQQQp.         dla Linux Mint 8 Helena
+  WQQQQQQQQQQQQQQQQQQp.         dla Linux Mint 8 Helena LXDE CE
   WQQQWQWQWQQQQQQQQQWQp  
   QWQQQW  QQQQWQQQQQQQQz        Powered by mati75 & Linux Mint Poland team
   WWQQQ#  QQQWUWWWVWWQQQ        http://www.linuxmint.pl 
-  QWQQQ#  QQF       4QWQc       Wersja: 0.4.4
+  QWQQQ#  QQF       4QWQc       Wersja: 0.5
   YYVQQ#  QD         QQQL	Copyright (C) 2010
      QQW  Qk.)Qc.]Qc 3QQC
     3QQ#  QC.]QC-]Q( jQQC
      QQ#  Qk.]QC.jQc 3QQC       Czy chcesz uruchomić program? [T]ak, [N]ie
-    3QQW  QC.]QC.]Q  jQQC
+    3QQW  QC.]QC.]Q  jQQC       
      QQ#  Qk:]QC:jQ  jQQC
     3QQm  WQQQQQQQQ  jQQC
      QQQ  3QWQQQQWE  dQQC
@@ -393,7 +397,5 @@ read start
 case $start in
  t | T | tak | Tak | TAK ) konfig;; 
  n | N | nie | Nie | NIE )  exit;;
-* )  echo -ne "\033[1mNiepoprawne polecenie\033[0m"; echo -ne "\033[1m 3...\033[0m"; sleep 0.5; echo -ne "\033[1m 2...\033[0m"; sleep 0.5; echo -ne "\033[1m 1...\033[0m" powrot=powrot;;
+* )  echo "\033[1mNiepoprawne polecenie\033[0m"; echo "\033[1m 3...\033[0m"; sleep 0.5; echo "\033[1m 2...\033[0m"; sleep 0.5; echo "\033[1m 1...\033[0m" ;;
 esac
-
-PS1='\\033[1;33m\\u:\[\033[1;32m\]\w \$ '

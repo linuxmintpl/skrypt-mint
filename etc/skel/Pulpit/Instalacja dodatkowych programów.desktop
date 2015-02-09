@@ -1,4 +1,3 @@
-
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
@@ -7,6 +6,6 @@ Terminal=true
 Icon[pl_PL]=/usr/share/pixmaps/mintpl.png
 Name[pl_PL]=Skonfiguruj system
 Comment[pl]=Skrypt instalująco-konfigurujący dla Linux Mint
-Exec=sudo sh /opt/skrypt.sh
+Exec=lxterminal -e skrypt-mint
 Name=Konfiguracja systemu
 Icon=/usr/share/pixmaps/mintpl.png
